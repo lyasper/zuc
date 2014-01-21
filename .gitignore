@@ -21,3 +21,5 @@
 *~
 .libs
 .deps
+*.lo
+*.la
