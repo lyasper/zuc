@@ -168,7 +168,12 @@ Daemonize(char* daemonname)
     
     umask(0);                       /* Clear file mode creation mask */
     ensuredir(getdwd(NULL));
-    chdir(getdwd(NULL));                     /* Change to working directory */
+    int ret = chdir(getdwd(NULL));                     /* Change to working directory */
+    if(ret == -1)
+    {
+        perror("chdir error");
+        return -1;
+    }
 
     /* Close all open files */
     maxfd = sysconf(_SC_OPEN_MAX);

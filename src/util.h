@@ -42,4 +42,4 @@ void	err_sys(const char *, ...) __attribute__((noreturn));
 void	 sleep_us(unsigned int);			/* {Ex sleepus} */
 
 
-int Daemonize();
+int Daemonize(char* daemonname);
