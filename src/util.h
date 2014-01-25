@@ -40,3 +40,6 @@ void	err_msg(const char *, ...);			/* {App misc_source} */
 void	err_sys(const char *, ...) __attribute__((noreturn));
 
 void	 sleep_us(unsigned int);			/* {Ex sleepus} */
+
+
+int Daemonize();
