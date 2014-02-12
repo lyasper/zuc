@@ -1,7 +1,7 @@
 zuc
 ===
 
-utility collection
+utility collection for small project. For big project, please try sth. like glib
 
 
 ===

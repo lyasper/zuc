@@ -35,6 +35,8 @@ void	 clr_fl(int, int);
 void	 set_fl(int, int);					/* {Prog setfl} */
 
 ssize_t	 writen(int, const void *, size_t);	/* {Prog readn_writen} */
+ssize_t  readn(int, void *ptr, size_t n);
+ssize_t  readline(int fd, void *buffer, size_t n);
 
 void	err_msg(const char *, ...);			/* {App misc_source} */
 void	err_sys(const char *, ...) __attribute__((noreturn));

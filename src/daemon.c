@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <strings.h>
 #include <signal.h>
+#include <sys/file.h>  //flock
 
 const char* getdwd(char* suffix);
 
@@ -113,6 +114,7 @@ lockpidfile()
         perror("Writing to PID file failed" );
     // close(fd);
     pidfd = fd;
+    flock(pidfd, LOCK_EX);
     return;
 }
 
@@ -122,6 +124,7 @@ void finish()
     // delete PID file
     if(pidfd != -1)
     {
+        flock(pidfd, LOCK_UN);
         close(pidfd);
     }
     unlink(PIDFILE);
@@ -232,7 +235,7 @@ Daemonize(char* daemonname)
 }
 
 
-#if _SELFTESTING
+#ifdef _SELFTESTING
 int
 main(int argc, char *argv[])
 {

@@ -70,6 +70,74 @@ writen(int fd, const void *ptr, size_t n)
 	return(n - nleft);      /* return >= 0 */
 }
 
+ssize_t             /* Read "n" bytes from a descriptor  */
+readn(int fd, void *ptr, size_t n)
+{
+        size_t          nleft;
+        ssize_t         nread;
+
+        nleft = n;
+        while (nleft > 0) {
+                if ((nread = read(fd, ptr, nleft)) < 0) {
+                        if (nleft == n)
+                                return(-1); /* error, return -1 */
+                        else
+                                break;      /* error, return amount read so far */
+                } else if (nread == 0) {
+                        break;          /* EOF */
+                }
+                nleft -= nread;
+                ptr   += nread;
+        }
+        return(n - nleft);      /* return >= 0 */
+}
+
+ssize_t
+readline(int fd, void *buffer, size_t n)
+{
+    ssize_t numRead;                    /* # of bytes fetched by last read() */
+    size_t totRead;                     /* Total bytes read so far */
+    char *buf;
+    char ch;
+
+    if (n <= 0 || buffer == NULL) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    buf = buffer;                       /* No pointer arithmetic on "void *" */
+
+    totRead = 0;
+    for (;;) {
+        numRead = read(fd, &ch, 1);
+
+        if (numRead == -1) {
+            if (errno == EINTR)         /* Interrupted --> restart read() */
+                continue;
+            else
+                return -1;              /* Some other error */
+
+        } else if (numRead == 0) {      /* EOF */
+            if (totRead == 0)           /* No bytes read; return 0 */
+                return 0;
+            else                        /* Some bytes read; add '\0' */
+                break;
+
+        } else {                        /* 'numRead' must be 1 if we get here */
+            if (totRead < n - 1) {      /* Discard > (n - 1) bytes */
+                totRead++;
+                *buf++ = ch;
+            }
+
+            if (ch == '\n')
+                break;
+        }
+    }
+
+    *buf = '\0';
+    return totRead;
+}
+
 
 void
 set_fl(int fd, int flags) /* flags are file status flags to turn on */
