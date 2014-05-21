@@ -179,3 +179,8 @@ sleep_us(unsigned int nusecs)
 	tval.tv_usec = nusecs % 1000000;
 	select(0, NULL, NULL, NULL, &tval);
 }
+
+void sleep_ms(unsigned int msecs)
+{
+  sleep_us(1000 * msecs);
+}
